@@ -1,6 +1,6 @@
 import joblib
 from scipy.spatial import distance
-from nlp_architect.config.path_config import tfidfmodelpath
+from nlp_architect.config.path_config import modelsave_path
 from nlp_architect.data.preprocess import Preprocessor
 from sklearn.feature_extraction.text import TfidfVectorizer
 
@@ -24,12 +24,12 @@ class TfidfModel(object):
         vectorizer = TfidfVectorizer(tokenizer=tokenize)
         docs = list(corpus.values())
         vectorizer.fit(docs)
-        joblib.dump(vectorizer,tfidfmodelpath)
+        joblib.dump(vectorizer,modelsave_path + 'tfidfmodel')
         X = vectorizer.transform(docs)
         return X
 
     def transform(self, newcorpus):
-        vectorizer = joblib.load(tfidfmodelpath)
+        vectorizer = joblib.load(modelsave_path+ 'tfidfmodel')
         X = vectorizer.transform(newcorpus)
         return X
 
@@ -44,7 +44,7 @@ class TfidfModel(object):
             disvalue = distance.cosine(X[index1].toarray(), X[index2].toarray())
             sim_.append(disvalue)
 
-        return {'tfidf_sim':sim_}
+        return sim_
 
 
 # if __name__ == "__main__":
